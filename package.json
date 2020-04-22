@@ -1,0 +1,28 @@
+{
+    "name": "com.hiome",
+    "version": "1.0.0",
+    "description": "Adds support for Hiome Occupancy Sensors.",
+    "main": "app.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Piotr-Grochowski/com.hiome.git"
+    },
+    "bugs": {
+      "url": "https://github.com/Piotr-Grochowski/com.hiome/issues"
+    },
+    "keywords": [
+      "hiome"
+    ],
+    "author": "Piotr Grochowski",
+    "license": "MIT",
+    "dependencies": {
+      "athom-cli": "^3.0.2",
+      "mqtt": "^2.13.0",
+      "http-min": "^2.0.1",
+      "npm": "^6.13.6"
+    }
+  }
+  
