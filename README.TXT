@@ -1,6 +1,6 @@
-# Hiome
+Hiome
 
-Adds support for Hiome.com occupancy & door sensors.
+Adds support for Hiome.com occupancy & door sensors. 
 Hiome Door is a small sensor for your door, a giant leap for your home. 
 It knows exactly how many people are in each room, even if you haven't moved for hours. 
 Your lights stay on while you're in the room, and immediately turn off when you leave. 
