@@ -1,6 +1,6 @@
 {
   "id": "com.hiome",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
@@ -32,13 +32,13 @@
       "$flow": {
         "triggers": [
           {
-            "id": "num_of_ppl_changed",
+            "id": "measure_ppl_count_changed",
             "title": {
               "en": "The number of people in the room changed"
             },
             "tokens": [
               {
-                "name": "ppl_count",
+                "name": "measure_ppl_count",
                 "title": {
                   "en": "People count"
                 },
@@ -96,6 +96,35 @@
           "id": "add_my_devices",
           "template": "add_devices" 
         }      ]
-    }    
+    },
+    {
+      "id": "DoorSensor",
+      "name": {
+          "en": "Door Sensor"
+        },
+      "class": "sensor",
+      "capabilities": ["alarm_contact"],
+      "images": {
+        "large": "/drivers/DoorSensor/assets/images/large.jpg",
+        "small": "/drivers/DoorSensor/assets/images/small.jpg"
+      },
+      "energy": {
+        "approximation": {
+          "usageConstant": 0.3
+        }
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices", 
+          "navigation": {
+            "next": "add_my_devices" 
+          }
+        },
+        {
+          "id": "add_my_devices",
+          "template": "add_devices" 
+        }      ]
+    }        
   ]
 }
