@@ -1,5 +1,8 @@
 {
   "1.0.0": {
     "en": "Initial release"
+  },
+  "1.1.1": {
+    "en": "Door Sensor support added. Small bugfixes. Readme file completed properly."
   }
 }
