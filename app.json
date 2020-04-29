@@ -1,13 +1,13 @@
 {
   "id": "com.hiome",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
     "en": "Hiome"
   },
   "description": {
-    "en": "Add support for Hiome occupancy sensors."
+    "en": "Unlock the full power of your smart home!"
   },
   "category": [
     "appliances"

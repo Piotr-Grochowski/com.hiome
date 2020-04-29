@@ -1,7 +1,5 @@
 This app adds Hiome occupancy & door sensors support for Homey.
 
-Unlock the full power of your smart home!
-
 Hiome Door is a small sensor for your door, a giant leap for your home. 
 It knows exactly how many people are in each room, even if you haven't moved for hours. 
 Your lights stay on while you're in the room, and immediately turn off when you leave. 
