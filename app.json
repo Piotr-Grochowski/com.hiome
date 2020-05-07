@@ -1,6 +1,6 @@
 {
   "id": "com.hiome",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
@@ -74,14 +74,43 @@
           "en": "Occupancy Sensor"
         },
       "class": "sensor",
-      "capabilities": ["alarm_motion","measure_ppl_count"],
+      "capabilities": ["alarm_motion","measure_ppl_count","button.increment","button.decrement","button.zero"],
+      "capabilitiesOptions": {
+        "button.increment": {
+          "maintenanceAction": true,
+          "title": { 
+             "en": "Increment people count"
+          },
+          "desc": { 
+             "en": "Adds 1 person to people count in the room."
+          }        
+        },
+        "button.decrement": {
+          "maintenanceAction": true,
+          "title": { 
+             "en": "Decrement people count"
+          },
+          "desc": { 
+             "en": "Removes 1 person from people count in the room."
+          }        
+        },        
+        "button.zero": {
+          "maintenanceAction": true,
+          "title": { 
+             "en": "Reset people count"
+          },
+          "desc": { 
+             "en": "Sets people count in the room to 0."
+          }        
+        }
+      },
       "images": {
         "large": "/drivers/OccupancySensor/assets/images/large.jpg",
         "small": "/drivers/OccupancySensor/assets/images/small.jpg"
       },
       "energy": {
         "approximation": {
-          "usageConstant": 0.3
+          "usageConstant": 0
         }
       },
       "pair": [
@@ -103,7 +132,7 @@
           "en": "Door Sensor"
         },
       "class": "sensor",
-      "capabilities": ["alarm_contact"],
+      "capabilities": ["alarm_contact","measure_battery","alarm_battery"],
       "images": {
         "large": "/drivers/DoorSensor/assets/images/large.jpg",
         "small": "/drivers/DoorSensor/assets/images/small.jpg"
@@ -111,7 +140,8 @@
       "energy": {
         "approximation": {
           "usageConstant": 0.3
-        }
+        },
+        "batteries":["INTERNAL"]
       },
       "pair": [
         {
@@ -126,5 +156,70 @@
           "template": "add_devices" 
         }      ]
     }        
-  ]
+  ],
+  "flow": {
+    "actions": [
+      {
+        "id": "occupancy_increment",
+        "title": {
+          "en": "Increment occupancy in a room"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=OccupancySensor"
+          }
+        ]
+      },
+      {
+        "id": "occupancy_decrement",
+        "title": {
+          "en": "Decrement occupancy in a room"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=OccupancySensor"
+          }
+        ]
+      },
+      {
+        "id": "occupancy_zero",
+        "title": {
+          "en": "Reset occupancy in a room to zero"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=OccupancySensor"
+          }
+        ]
+      },
+      {
+        "id": "occupancy_set",
+        "title": {
+          "en": "Set number of people in a room"
+        },
+        "args": [
+          {
+            "name": "my_device",
+            "type": "device",
+            "filter": "driver_id=OccupancySensor"
+          },
+          {
+            "name": "val",
+            "type": "number",
+            "min":  0,
+            "max":  99,
+            "step": 1,
+            "placeholder": "Number of people"
+          }
+
+        ]
+      }
+    ]
+  }
 }
