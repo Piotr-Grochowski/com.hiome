@@ -27,7 +27,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	{
 		const message = JSON.parse(msg)
 		if (message["meta"]["type"] === "door") {
-			if(message["val"]=='opened')
+			if(message["val"]=='opened' || message["val"]=='open')
 			{
 				this.setCapabilityValue('alarm_contact', true);
 			}

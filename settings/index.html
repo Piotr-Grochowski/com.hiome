@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<head>
+    <!-- The '/homey.js' script must be included in your settings view to work -->
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+
+    <style>
+        label.a {
+            display: inline-block;
+            width: 150px;
+            height: 15px;
+            padding: 5px;
+            font-size: 15px;
+        }
+        label.b {
+            display: inline-block;
+            width: 30px;
+            height: 20px;
+            padding: 5px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <fieldset>
+        <legend>Rooms</legend>
+        <div id="roomSection"></div>
+    </fieldset>
+
+    <script type="text/javascript">
+        // a method named 'onHomeyReady' must be present in your code
+        function onHomeyReady(Homey)
+        {
+            getRooms();
+
+            Homey.on('com.hiome.UpdateCount', function(data)
+            {
+                document.getElementById(data.id).innerHTML = data.count;
+            });
+
+            // Tell Homey we're ready to be displayed
+            Homey.ready();
+        };
+
+        function incRoom(id)
+        {
+            let count = parseInt(document.getElementById(id).innerHTML) + 1;
+            Homey.api('POST', '/SetCount/', { id: id, count: count }, function(err, result)
+            {
+                if (err)
+                {
+                    return Homey.alert(err);
+                }
+
+                document.getElementById(id).innerHTML = count;
+            });
+        }
+
+        function decRoom(id)
+        {
+            let count = parseInt(document.getElementById(id).innerHTML) - 1;
+            if (count >= 0)
+            {
+                Homey.api('POST', '/SetCount/', { id: id, count: count }, function(err, result)
+                {
+                    if (err)
+                    {
+                        return Homey.alert(err);
+                    }
+
+                    document.getElementById(id).innerHTML = count;
+                });
+            }
+        }
+
+        function addRoom(id, roomName, count)
+        {
+            console.log("addRoom");
+            var section = document.getElementById('roomSection').innerHTML;
+
+            document.getElementById('roomSection').innerHTML = section +
+                '<div class="field row"><p><label class="a">' +
+                roomName + '</label><label class="b" id=' + id + '>' + count + '</label><button onClick="incRoom(' + "'" + id + "'" + ')">+</button><button onClick="decRoom(' + "'" + id + "'" + ')">-</button></p></div>';
+
+        }
+
+        function getRooms()
+        {
+            document.getElementById('roomSection').innerHTML = "";
+
+            Homey.api('POST', '/GetRooms/', {}, function(err, result)
+            {
+                if (err)
+                {
+                    return Homey.alert(err);
+                }
+
+                result.forEach(element =>
+                {
+                    addRoom(element.id, element.name, element.occupancy_count);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

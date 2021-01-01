@@ -19,10 +19,7 @@
     "author": "Piotr Grochowski",
     "license": "MIT",
     "dependencies": {
-      "athom-cli": "^3.0.2",
-      "mqtt": "^2.13.0",
-      "http-min": "^2.0.1",
-      "npm": "^6.13.6"
+    "http.min": "^2.0.1",
+    "mqtt": "^2.18.8"
     }
   }
-  

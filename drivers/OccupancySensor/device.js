@@ -92,8 +92,9 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 		try{
 		const message = JSON.parse(msg)
 		if (message["meta"]["type"] === "occupancy") {
-			this.setCapabilityValue('measure_ppl_count',message["val"]);
-			if(message["val"]>0)
+			let count = message["val"]; 
+			this.setCapabilityValue('measure_ppl_count', count);
+			if(count>0)
 			{
 				this.setCapabilityValue('alarm_motion', true);
 			}
@@ -101,6 +102,8 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 			{
 				this.setCapabilityValue('alarm_motion', false);
 			}
+
+			Homey.ManagerApi.realtime('com.hiome.UpdateCount', { id: this.getData().id, count: count});
 		}	
 		}
 		catch(error)
