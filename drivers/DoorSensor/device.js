@@ -15,8 +15,9 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async subscribeSensor()
 	{
 		try{
-			this.client.subscribe("hiome/1/sensor/"+this.getData().id+":door", {qos: 1})
-			this.client.subscribe("hiome/1/sensor/"+this.getData().id+":battery", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/door", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/battery", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/*", {qos: 1})
 		}
 		catch(err){
 			console.log(err);
@@ -26,8 +27,8 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async sensorUpdate(topic, msg, packet)
 	{
 		const message = JSON.parse(msg)
-		if (message["meta"]["type"] === "door") {
-			if(message["val"]=='opened')
+		if (topic === "hs/1/com.hiome/"+this.getData().id+"/door") {
+			if(message["val"]=='open' || message["val"]=='opened')
 			{
 				this.setCapabilityValue('alarm_contact', true);
 			}
@@ -37,7 +38,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 			}
 		}	
 		else
-		if (message["meta"]["type"] === "battery") {
+		if (topic === "hs/1/com.hiome/"+this.getData().id+"/battery") {
 			if(message["val"]==0)
 			{
 				this.setCapabilityValue('measure_battery', null);

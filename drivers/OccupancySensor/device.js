@@ -80,7 +80,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	async subscribeSensor()
 	{
 		try{
-			this.client.subscribe("hiome/1/sensor/"+this.getData().id+":occupancy", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/occupancy", {qos: 1})
 		}
 		catch(err){
 			console.log(err);
@@ -91,9 +91,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	{
 		try{
 		const message = JSON.parse(msg)
-		if (message["meta"]["type"] === "occupancy") {
-			this.setCapabilityValue('measure_ppl_count',message["val"]);
-			if(message["val"]>0)
+		if (topic === "hs/1/com.hiome/"+this.getData().id+"/occupancy") {
+			let pplCount = message["val"];
+			this.setCapabilityValue('measure_ppl_count',pplCount);
+			if(pplCount>0)
 			{
 				this.setCapabilityValue('alarm_motion', true);
 			}
