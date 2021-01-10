@@ -1,6 +1,6 @@
 {
     "name": "com.hiome",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Adds support for Hiome Occupancy Sensors.",
     "main": "app.js",
     "scripts": {
@@ -19,7 +19,7 @@
     "author": "Piotr Grochowski",
     "license": "MIT",
     "dependencies": {
-      "mqtt": "^2.13.0",
+      "mqtt": "^2.18.8",
       "http.min": "^2.0.1"
     }
   }

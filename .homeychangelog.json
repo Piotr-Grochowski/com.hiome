@@ -10,5 +10,8 @@
   },
   "1.2.0": {
     "en": "Battery pack support and ability to change the number of persons in a room from Homey."
+  },
+  "2.1.0": {
+    "en": "New Hiome API support, added App configuration page with multiple Hiome Cores config and mass room occupancy tweaks."
   }
 }

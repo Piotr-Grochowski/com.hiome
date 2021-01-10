@@ -1,6 +1,6 @@
 {
   "id": "com.hiome",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "name": {
@@ -124,7 +124,34 @@
         {
           "id": "add_my_devices",
           "template": "add_devices" 
-        }      ]
+        }      ],
+        "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General"
+          },
+          "children": [
+            {
+              "id": "core",
+              "type": "label",
+              "value": "primary",
+              "label": {
+                "en": "Hiome Core"
+              }
+            },
+            {
+              "id": "mqttid",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "MQTT ID"
+              }
+            }
+
+          ]
+        }
+        ]
     },
     {
       "id": "DoorSensor",
@@ -154,7 +181,35 @@
         {
           "id": "add_my_devices",
           "template": "add_devices" 
-        }      ]
+        }      
+      ],
+      "settings": [
+      {
+        "type": "group",
+        "label": {
+          "en": "Core"
+        },
+        "children": [
+          {
+            "id": "core",
+            "type": "label",
+            "value": "primary",
+            "label": {
+              "en": "Hiome Core"
+            }
+          },
+          {
+            "id": "mqttid",
+            "type": "label",
+            "value": "",
+            "label": {
+              "en": "MQTT ID"
+            }
+          }
+    
+        ]
+      }
+      ]
     }        
   ],
   "flow": {

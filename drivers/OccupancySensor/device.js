@@ -8,7 +8,12 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	// Device init
 	onInit() {	
 		this.setAvailable();
-		this.client = mqtt.connect("mqtt://hiome.local:1883")
+		let coreAddress = Homey.ManagerSettings.get('primaryCore');
+		if(this.getSetting('core')=='secondary')
+		{
+			coreAddress = Homey.ManagerSettings.get('secondaryCore');
+		}
+		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
 		this.client.on("message", this.sensorUpdate.bind(this));
 
@@ -21,10 +26,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	async onCapabilityIncrement( value, opts ) {
 		let jsonin = 
 		{
-				"id": this.getData().id,
+				"id": this.getSetting('mqttid'),
 				"occupancy_count" : this.getCapabilityValue('measure_ppl_count')+1
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getData().id,'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);
@@ -37,10 +42,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 		{
 			let jsonin = 
 			{
-					"id": this.getData().id,
+					"id": this.getSetting('mqttid'),
 					"occupancy_count" : this.getCapabilityValue('measure_ppl_count')-1
 			};
-			util.sendPutCommand('/api/1/rooms/'+this.getData().id,'hiome.local',jsonin)
+			util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
 			.catch(error => {
 				console.log('Hiome Core is not reachable.');
 				console.log(error);
@@ -51,10 +56,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	async onCapabilityZero( value, opts ) {
 		let jsonin = 
 		{
-				"id": this.getData().id,
+				"id": this.getSetting('mqttid'),
 				"occupancy_count" : 0
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getData().id,'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);
@@ -65,10 +70,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	async setOccupancyValue( val) {
 		let jsonin = 
 		{
-				"id": this.getData().id,
+				"id": this.getSetting('mqttid'),
 				"occupancy_count" : val
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getData().id,'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);
@@ -80,7 +85,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	async subscribeSensor()
 	{
 		try{
-			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/occupancy", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/occupancy", {qos: 1})
 		}
 		catch(err){
 			console.log(err);
@@ -91,7 +96,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	{
 		try{
 		const message = JSON.parse(msg)
-		if (topic === "hs/1/com.hiome/"+this.getData().id+"/occupancy") {
+		if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/occupancy") {
 			let pplCount = message["val"];
 			this.setCapabilityValue('measure_ppl_count',pplCount);
 			if(pplCount>0)
@@ -102,6 +107,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 			{
 				this.setCapabilityValue('alarm_motion', false);
 			}
+			Homey.ManagerApi.realtime('com.hiome.UpdateCount', { id: this.getSetting('mqttid'), count: pplCount});
 		}	
 		}
 		catch(error)

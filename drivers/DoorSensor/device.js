@@ -7,7 +7,12 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	// Device init
 	onInit() {	
 		this.setAvailable();
-		this.client = mqtt.connect("mqtt://hiome.local:1883")
+		let coreAddress = Homey.ManagerSettings.get('primaryCore');
+		if(this.getSetting('core')=='secondary')
+		{
+			coreAddress = Homey.ManagerSettings.get('secondaryCore');
+		}
+		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
 		this.client.on("message", this.sensorUpdate.bind(this));		
 	}
@@ -15,9 +20,9 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async subscribeSensor()
 	{
 		try{
-			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/door", {qos: 1})
-			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/battery", {qos: 1})
-			this.client.subscribe("hs/1/com.hiome/"+this.getData().id+"/*", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/door", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/battery", {qos: 1})
+			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/*", {qos: 1})
 		}
 		catch(err){
 			console.log(err);
@@ -27,7 +32,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async sensorUpdate(topic, msg, packet)
 	{
 		const message = JSON.parse(msg)
-		if (topic === "hs/1/com.hiome/"+this.getData().id+"/door") {
+		if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/door") {
 			if(message["val"]=='open' || message["val"]=='opened')
 			{
 				this.setCapabilityValue('alarm_contact', true);
@@ -38,7 +43,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 			}
 		}	
 		else
-		if (topic === "hs/1/com.hiome/"+this.getData().id+"/battery") {
+		if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/battery") {
 			if(message["val"]==0)
 			{
 				this.setCapabilityValue('measure_battery', null);

@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+
+<head>
+    <!-- The '/homey.js' script must be included in your settings view to work -->
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+
+    <style>
+        label.a {
+            display: inline-block;
+            width: 150px;
+            height: 15px;
+            padding: 5px;
+            font-size: 15px;
+        }
+        label.b {
+            display: inline-block;
+            width: 30px;
+            height: 20px;
+            padding: 5px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <fieldset>
+        <legend>Hiome Cores</legend>
+        <div id="coreSection"></div>
+        <div class="field row"><p><label for="primaryCore">Primary Hiome Core</label><input id="primaryCore" type="text" value="" /></p></div>
+        <div class="field row"><p><label for="secondaryCore">Secondary Hiome Core</label><input id="secondaryCore" type="text" value="" /></p></div>
+        <button id="save" class="right">Save changes</button>
+    </fieldset>
+    <fieldset>
+        <legend>Rooms</legend>
+        <div id="roomSection"></div>
+    </fieldset>
+
+    <script type="text/javascript">
+        // a method named 'onHomeyReady' must be present in your code
+        function onHomeyReady(Homey)
+        {
+            getRooms();
+
+            Homey.on('com.hiome.UpdateCount', function(data)
+            {
+                document.getElementById(data.id).innerHTML = data.count;
+            });
+
+            var primaryCoreElement = document.getElementById('primaryCore');
+            var secondaryCoreElement = document.getElementById('secondaryCore');
+            var saveElement = document.getElementById('save');
+
+            Homey.get('primaryCore', function( err, primaryCore ) {
+	           if( err ) return Homey.alert( err );
+			   primaryCoreElement.value = primaryCore;
+	        });
+
+            Homey.get('secondaryCore', function( err, secondaryCore ) {
+	           if( err ) return Homey.alert( err );
+			   secondaryCoreElement.value = secondaryCore;
+	        });
+
+
+            saveElement.addEventListener('click', function(e) {
+
+                Homey.set('primaryCore', primaryCoreElement.value, function( err ){
+                    if( err ) return Homey.alert( err );
+                });
+                Homey.set('secondaryCore', secondaryCoreElement.value, function( err ){
+                    if( err ) return Homey.alert( err );
+                });
+            });
+
+            // Tell Homey we're ready to be displayed
+            Homey.ready();
+        };
+
+        function incRoom(id)
+        {
+            let count = parseInt(document.getElementById(id).innerHTML) + 1;
+            Homey.api('POST', '/SetCount/', { id: id, count: count }, function(err, result)
+            {
+                if (err)
+                {
+                    return Homey.alert(err);
+                }
+
+                document.getElementById(id).innerHTML = count;
+            });
+        }
+
+        function decRoom(id)
+        {
+            let count = parseInt(document.getElementById(id).innerHTML) - 1;
+            if (count >= 0)
+            {
+                Homey.api('POST', '/SetCount/', { id: id, count: count }, function(err, result)
+                {
+                    if (err)
+                    {
+                        return Homey.alert(err);
+                    }
+
+                    document.getElementById(id).innerHTML = count;
+                });
+            }
+        }
+
+        function addRoom(id, roomName, count)
+        {
+            console.log("addRoom");
+            var section = document.getElementById('roomSection').innerHTML;
+
+            document.getElementById('roomSection').innerHTML = section +
+                '<div class="field row"><p><label class="a">' +
+                roomName + '</label><label class="b" id=' + id + '>' + count + '</label><button onClick="incRoom(' + "'" + id + "'" + ')">+</button><button onClick="decRoom(' + "'" + id + "'" + ')">-</button></p></div>';
+
+        }
+
+        function getRooms()
+        {
+            document.getElementById('roomSection').innerHTML = "";
+
+            Homey.api('POST', '/GetRooms/', {}, function(err, result)
+            {
+                if (err)
+                {
+                    return Homey.alert(err);
+                }
+
+                result.forEach(element =>
+                {
+                    addRoom(element.id, element.name, element.occupancy_count);
+                });
+            });
+        }
+
+</script>
+</body>
+
+</html>
