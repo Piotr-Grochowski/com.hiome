@@ -1,8 +1,8 @@
 {
   "id": "com.hiome",
-  "version": "2.1.0",
-  "compatibility": ">=3.0.0",
-  "sdk": 2,
+  "version": "3.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
   "name": {
     "en": "Hiome"
   },
@@ -12,6 +12,16 @@
   "category": [
     "appliances"
   ],
+  "api":{
+    "GetRooms": {
+      "method": "post",
+      "path": "/GetRooms/"
+    },
+    "SetCount": {
+      "method": "post",
+      "path": "/SetCount/"
+    }
+  },
   "capabilities": {
     "measure_ppl_count": {
       "type": "number",
@@ -59,6 +69,13 @@
   "author": {
     "name": "Piotr Grochowski",
     "email": "piotr@grochowski.org"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Adrian Rockall"
+      }
+    ]
   },
   "contributing": {
     "donate": {

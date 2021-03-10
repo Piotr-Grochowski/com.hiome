@@ -13,5 +13,8 @@
   },
   "2.1.0": {
     "en": "New Hiome API support, added App configuration page with multiple Hiome Cores config and mass room occupancy tweaks."
+  },
+  "3.0.0": {
+    "en": "Homey SDK3 support"
   }
 }

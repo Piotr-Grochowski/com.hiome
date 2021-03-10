@@ -8,10 +8,10 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	// Device init
 	onInit() {	
 		this.setAvailable();
-		let coreAddress = Homey.ManagerSettings.get('primaryCore');
+		let coreAddress = this.homey.settings.get('primaryCore');
 		if(this.getSetting('core')=='secondary')
 		{
-			coreAddress = Homey.ManagerSettings.get('secondaryCore');
+			coreAddress = this.homey.settings.get('secondaryCore');
 		}
 		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
@@ -107,7 +107,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 			{
 				this.setCapabilityValue('alarm_motion', false);
 			}
-			Homey.ManagerApi.realtime('com.hiome.UpdateCount', { id: this.getSetting('mqttid'), count: pplCount});
+			this.homey.api.realtime('com.hiome.UpdateCount', { id: this.getSetting('mqttid'), count: pplCount});
 		}	
 		}
 		catch(error)

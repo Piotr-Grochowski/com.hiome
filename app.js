@@ -9,39 +9,28 @@ class MyApp extends Homey.App {
 	onInit() {
 		this.log('Hiome App is running...');
 
-		if(Homey.ManagerSettings.get('primaryCore')=='')
-			Homey.ManagerSettings.set('primaryCore','hiome.local');
+		if(this.homey.settings.get('primaryCore')=='')
+			this.homey.settings.set('primaryCore','hiome.local');
 
-		let occupancyIncrementAction = new Homey.FlowCardAction('occupancy_increment');
-		let occupancyDecrementAction = new Homey.FlowCardAction('occupancy_decrement');
-		let occupancyZeroAction = new Homey.FlowCardAction('occupancy_zero');
-		let occupancySetAction = new Homey.FlowCardAction('occupancy_set');
+		this.homey.flow.getActionCard('occupancy_increment')
+			.registerRunListener(( args, state ) => {
+				return args.my_device.onCapabilityIncrement(null,null);
+			});
 
-		occupancyIncrementAction
-		  .register()
-		  .registerRunListener(( args, state ) => {
-			return args.my_device.onCapabilityIncrement(null,null);
-		  });
+		this.homey.flow.getActionCard('occupancy_decrement')
+			.registerRunListener(( args, state ) => {
+				return args.my_device.onCapabilityDecrement(null,null);
+			});
 
-		  occupancyDecrementAction
-		  .register()
-		  .registerRunListener(( args, state ) => {
-			return args.my_device.onCapabilityDecrement(null,null);
-		  });
+		this.homey.flow.getActionCard('occupancy_zero')
+			.registerRunListener(( args, state ) => {
+				return args.my_device.onCapabilityZero(null,null);
+			});
 
-		  occupancyZeroAction
-		  .register()
-		  .registerRunListener(( args, state ) => {
-			return args.my_device.onCapabilityZero(null,null);
-		  });
-
-		  occupancySetAction
-		  .register()
-		  .registerRunListener(( args, state ) => {
-			return args.my_device.setOccupancyValue(args.val);
-		  });
-
-
+		this.homey.flow.getActionCard('occupancy_set')
+			.registerRunListener(( args, state ) => {
+				return args.my_device.setOccupancyValue(args.val);
+			});
 	}
 
 	onGetRooms(callback){

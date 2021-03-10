@@ -7,10 +7,10 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	// Device init
 	onInit() {	
 		this.setAvailable();
-		let coreAddress = Homey.ManagerSettings.get('primaryCore');
+		let coreAddress = this.homey.settings.get('primaryCore');
 		if(this.getSetting('core')=='secondary')
 		{
-			coreAddress = Homey.ManagerSettings.get('secondaryCore');
+			coreAddress = this.homey.settings.get('secondaryCore');
 		}
 		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
