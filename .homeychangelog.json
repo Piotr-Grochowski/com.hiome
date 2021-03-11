@@ -16,5 +16,11 @@
   },
   "3.0.0": {
     "en": "Homey SDK3 support"
+  },
+  "3.0.1": {
+    "en": "Config page bugfix"
+  },
+  "3.0.2": {
+    "en": "Config page bugfixes"
   }
 }
