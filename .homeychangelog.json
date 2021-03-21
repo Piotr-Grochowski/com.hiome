@@ -22,5 +22,11 @@
   },
   "3.0.2": {
     "en": "Config page bugfixes"
+  },
+  "3.2.0": {
+    "en": "Battery pack charger support added, heartbeat support added, minor fixes and improvements."
+  },
+  "3.2.1": {
+    "en": "Assets fix"
   }
 }

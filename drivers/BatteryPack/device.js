@@ -2,9 +2,9 @@ const Homey = require('homey');
 
 const mqtt = require("mqtt")
 
-module.exports = class HiomeDoorDevice extends Homey.Device {
+module.exports = class HiomeBatteryPackDevice extends Homey.Device {
 
-	// Helper function - wait for ms miliseconds
+	// Helper funcion - delay ms miliseconds
 	async delay(ms)
 	{ 
 		return new Promise(resolve => this.homey.setTimeout(resolve, ms));
@@ -14,7 +14,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	onInit() {	
 		this.setAvailable();
 		this.lastSeen = 0;		
-
+		
 		// Determine Hiome Core address
 		let coreAddress = this.homey.settings.get('primaryCore');
 		if(this.getSetting('core')=='secondary')
@@ -22,12 +22,12 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 			coreAddress = this.homey.settings.get('secondaryCore');
 		}
 
-		// Connect to MQTT
+		// Connect to MQTT Broker in Hiome Core
 		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
 		this.client.on("message", this.sensorUpdate.bind(this));	
 
-		// Enable pooling
+		// Enable the loop that checks the avaibility of the device
 		this.addListener('poll', this.pollDevice);
 		this.emit('poll');	
 	}
@@ -50,7 +50,6 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async subscribeSensor()
 	{
 		try{
-			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/door", {qos: 1})
 			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/battery", {qos: 1})
 			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/connected", {qos: 1})
 			this.client.subscribe("hs/1/com.hiome/"+this.getSetting('mqttid')+"/version", {qos: 1})
@@ -64,20 +63,9 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 	async sensorUpdate(topic, msg, packet)
 	{
 		try
-		{
+		{		
 			const message = JSON.parse(msg)
-			// Door contact alarm update
-			if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/door") {
-				if(message["val"]=='open' || message["val"]=='opened')
-				{
-					this.setCapabilityValue('alarm_contact', true);
-				}
-				else
-				{
-					this.setCapabilityValue('alarm_contact', false);
-				}
-			}	
-			else
+
 			// Battery level update
 			if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/battery") {
 				if(message["val"]==0)
@@ -109,8 +97,8 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 					this.setAvailable();
 
 			}	
+			// Firmware version
 			else
-			// Firmware version update
 			if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/version") {
 				this.setSettings({
 					"fv": message["val"]	
@@ -121,6 +109,7 @@ module.exports = class HiomeDoorDevice extends Homey.Device {
 		{
 			console.log(error);
 
-		}	
+		}
+	
 	}
 }

@@ -1,6 +1,6 @@
 {
     "name": "com.hiome",
-    "version": "3.0.2",
+    "version": "3.2.1",
     "description": "Adds support for Hiome Occupancy Sensors.",
     "main": "app.js",
     "scripts": {

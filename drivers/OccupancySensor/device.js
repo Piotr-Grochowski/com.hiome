@@ -8,21 +8,27 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 	// Device init
 	onInit() {	
 		this.setAvailable();
+
+		// Determine Hiome Core address
 		let coreAddress = this.homey.settings.get('primaryCore');
 		if(this.getSetting('core')=='secondary')
 		{
 			coreAddress = this.homey.settings.get('secondaryCore');
 		}
+
+		// Connect to MQTT
 		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
 		this.client.on("message", this.sensorUpdate.bind(this));
 
+		// Register capabilities
 		this.registerCapabilityListener('button.increment', this.onCapabilityIncrement.bind(this));
 		this.registerCapabilityListener('button.decrement', this.onCapabilityDecrement.bind(this));
 		this.registerCapabilityListener('button.zero', this.onCapabilityZero.bind(this));
 
 	}
 
+	// Inrement people count
 	async onCapabilityIncrement( value, opts ) {
 		let jsonin = 
 		{
@@ -37,6 +43,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 
 	}
 
+	// Decrement people count
 	async onCapabilityDecrement( value, opts ) {
 		if(this.getCapabilityValue('measure_ppl_count')>0)
 		{
@@ -53,6 +60,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 		}
 	}
 
+	// Reset people count to 0
 	async onCapabilityZero( value, opts ) {
 		let jsonin = 
 		{
@@ -67,7 +75,8 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 
 	}
 
-	async setOccupancyValue( val) {
+	// Set the number of people in the room to val
+	async setOccupancyValue(val) {
 		let jsonin = 
 		{
 				"id": this.getSetting('mqttid'),
@@ -81,7 +90,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 
 	}
 
-
+	// Subscribe to MQTT topics
 	async subscribeSensor()
 	{
 		try{
@@ -92,23 +101,20 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 		}
 	}
 
+	// Update the sensor after MQTT message
 	async sensorUpdate(topic, msg, packet)
 	{
 		try{
-		const message = JSON.parse(msg)
-		if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/occupancy") {
-			let pplCount = message["val"];
-			this.setCapabilityValue('measure_ppl_count',pplCount);
-			if(pplCount>0)
+			const message = JSON.parse(msg)
+			if (topic === "hs/1/com.hiome/"+this.getSetting('mqttid')+"/occupancy") 
 			{
-				this.setCapabilityValue('alarm_motion', true);
-			}
-			else
-			{
-				this.setCapabilityValue('alarm_motion', false);
-			}
-			this.homey.api.realtime('com.hiome.UpdateCount', { id: this.getSetting('mqttid'), count: pplCount});
-		}	
+				let pplCount = message["val"];
+				this.setCapabilityValue('measure_ppl_count',pplCount);
+				this.setCapabilityValue('alarm_motion', pplCount>0 ? true : false);
+
+				// Update for app config page
+				this.homey.api.realtime('com.hiome.UpdateCount', { id: this.getData().id, count: pplCount});
+			}	
 		}
 		catch(error)
 		{

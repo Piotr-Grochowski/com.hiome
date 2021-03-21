@@ -3,11 +3,12 @@ const util = require('/lib/util.js');
 
 module.exports = class HiomeDoorDriver extends Homey.Driver {
 
-    // this is the easiest method to overwrite, when only the template 'Drivers-Pairing-System-Views' is being used.
+    // Get the devices list
     async onPairListDevices() {
 
       var devices = [];
 
+      // Get the devices from primary Hiome Core
       await util.sendGetCommand('/api/1/sensors?type=door',this.homey.settings.get('primaryCore'))
 			.then(result => {
         result.forEach(element => {
@@ -18,6 +19,7 @@ module.exports = class HiomeDoorDriver extends Homey.Driver {
         this.log('Hiome Core is not reachable.');
 			})    
 
+      // Get the devices from secondary Hiome Core if configured
       if(this.homey.settings.get('secondaryCore')!='')
       {
         await util.sendGetCommand('/api/1/sensors?type=door',this.homey.settings.get('secondaryCore'))
