@@ -28,5 +28,17 @@
   },
   "3.2.1": {
     "en": "Assets fix"
+  },
+  "3.2.2": {
+    "en": "Bugfixes for maintenance actions"
+  },
+  "3.2.3": {
+    "en": "New AppStore requirements applied"
+  },
+  "3.2.4": {
+    "en": "Bugfixes"
+  },
+  "3.2.5": {
+    "en": "Homey Pro 2023 bugfix"
   }
 }

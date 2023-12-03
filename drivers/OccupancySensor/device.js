@@ -1,7 +1,7 @@
 const Homey = require('homey');
 
 const mqtt = require("mqtt")
-const util = require('/lib/util.js');
+const util = require('../../lib/util.js');
 
 module.exports = class HiomeOccupancyDevice extends Homey.Device {
 
@@ -10,14 +10,14 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 		this.setAvailable();
 
 		// Determine Hiome Core address
-		let coreAddress = this.homey.settings.get('primaryCore');
+		this.coreAddress = this.homey.settings.get('primaryCore');
 		if(this.getSetting('core')=='secondary')
 		{
 			coreAddress = this.homey.settings.get('secondaryCore');
 		}
 
 		// Connect to MQTT
-		this.client = mqtt.connect("mqtt://"+coreAddress+":1883");
+		this.client = mqtt.connect("mqtt://"+this.coreAddress+":1883");
 		this.client.on("connect", this.subscribeSensor.bind(this));
 		this.client.on("message", this.sensorUpdate.bind(this));
 
@@ -35,7 +35,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 				"id": this.getSetting('mqttid'),
 				"occupancy_count" : this.getCapabilityValue('measure_ppl_count')+1
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),this.coreAddress,jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);
@@ -52,7 +52,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 					"id": this.getSetting('mqttid'),
 					"occupancy_count" : this.getCapabilityValue('measure_ppl_count')-1
 			};
-			util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
+			util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),this.coreAddress,jsonin)
 			.catch(error => {
 				console.log('Hiome Core is not reachable.');
 				console.log(error);
@@ -67,7 +67,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 				"id": this.getSetting('mqttid'),
 				"occupancy_count" : 0
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),this.coreAddress,jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);
@@ -82,7 +82,7 @@ module.exports = class HiomeOccupancyDevice extends Homey.Device {
 				"id": this.getSetting('mqttid'),
 				"occupancy_count" : val
 		};
-		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),'hiome.local',jsonin)
+		util.sendPutCommand('/api/1/rooms/'+this.getSetting('mqttid'),this.coreAddress,jsonin)
 		.catch(error => {
 			console.log('Hiome Core is not reachable.');
 			console.log(error);

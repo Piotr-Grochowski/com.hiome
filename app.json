@@ -1,6 +1,6 @@
 {
   "id": "com.hiome",
-  "version": "3.2.1",
+  "version": "3.2.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -12,7 +12,8 @@
   "category": [
     "appliances"
   ],
-  "api":{
+  "brandColor": "#dfba20",
+  "api": {
     "GetRooms": {
       "method": "post",
       "path": "/GetRooms/"
@@ -88,37 +89,43 @@
     {
       "id": "OccupancySensor",
       "name": {
-          "en": "Occupancy Sensor"
-        },
+        "en": "Occupancy Sensor"
+      },
       "class": "sensor",
-      "capabilities": ["alarm_motion","measure_ppl_count","button.increment","button.decrement","button.zero"],
+      "capabilities": [
+        "alarm_motion",
+        "measure_ppl_count",
+        "button.increment",
+        "button.decrement",
+        "button.zero"
+      ],
       "capabilitiesOptions": {
         "button.increment": {
           "maintenanceAction": true,
-          "title": { 
-             "en": "Increment people count"
+          "title": {
+            "en": "Increment people count"
           },
-          "desc": { 
-             "en": "Adds 1 person to people count in the room."
-          }        
+          "desc": {
+            "en": "Adds 1 person to people count in the room."
+          }
         },
         "button.decrement": {
           "maintenanceAction": true,
-          "title": { 
-             "en": "Decrement people count"
+          "title": {
+            "en": "Decrement people count"
           },
-          "desc": { 
-             "en": "Removes 1 person from people count in the room."
-          }        
-        },        
+          "desc": {
+            "en": "Removes 1 person from people count in the room."
+          }
+        },
         "button.zero": {
           "maintenanceAction": true,
-          "title": { 
-             "en": "Reset people count"
+          "title": {
+            "en": "Reset people count"
           },
-          "desc": { 
-             "en": "Sets people count in the room to 0."
-          }        
+          "desc": {
+            "en": "Sets people count in the room to 0."
+          }
         }
       },
       "images": {
@@ -133,16 +140,17 @@
       "pair": [
         {
           "id": "list_devices",
-          "template": "list_devices", 
+          "template": "list_devices",
           "navigation": {
-            "next": "add_my_devices" 
+            "next": "add_my_devices"
           }
         },
         {
           "id": "add_my_devices",
-          "template": "add_devices" 
-        }      ],
-        "settings": [
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
         {
           "type": "group",
           "label": {
@@ -165,18 +173,21 @@
                 "en": "MQTT ID"
               }
             }
-
           ]
         }
-        ]
+      ]
     },
     {
       "id": "DoorSensor",
       "name": {
-          "en": "Door Sensor"
-        },
+        "en": "Door Sensor"
+      },
       "class": "sensor",
-      "capabilities": ["alarm_contact","measure_battery","alarm_battery"],
+      "capabilities": [
+        "alarm_contact",
+        "measure_battery",
+        "alarm_battery"
+      ],
       "images": {
         "large": "/drivers/DoorSensor/assets/images/large.jpg",
         "small": "/drivers/DoorSensor/assets/images/small.jpg"
@@ -185,136 +196,141 @@
         "approximation": {
           "usageConstant": 0.3
         },
-        "batteries":["INTERNAL"]
+        "batteries": [
+          "INTERNAL"
+        ]
       },
       "pair": [
         {
           "id": "list_devices",
-          "template": "list_devices", 
+          "template": "list_devices",
           "navigation": {
-            "next": "add_my_devices" 
+            "next": "add_my_devices"
           }
         },
         {
           "id": "add_my_devices",
-          "template": "add_devices" 
-        }      
+          "template": "add_devices"
+        }
       ],
       "settings": [
-      {
-        "type": "group",
-        "label": {
-          "en": "Core"
-        },
-        "children": [
-          {
-            "id": "core",
-            "type": "label",
-            "value": "primary",
-            "label": {
-              "en": "Hiome Core"
-            }
+        {
+          "type": "group",
+          "label": {
+            "en": "Core"
           },
-          {
-            "id": "mqttid",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "MQTT ID"
+          "children": [
+            {
+              "id": "core",
+              "type": "label",
+              "value": "primary",
+              "label": {
+                "en": "Hiome Core"
+              }
+            },
+            {
+              "id": "mqttid",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "MQTT ID"
+              }
+            },
+            {
+              "id": "last_seen",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "Last seen"
+              }
+            },
+            {
+              "id": "fv",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "Firmware version"
+              }
             }
-          },
-          {
-            "id": "last_seen",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "Last seen"
-            }
-          },
-          {
-            "id": "fv",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "Firmware version"
-            }
-          }
-
-        ]
-      }
+          ]
+        }
       ]
     },
     {
       "id": "BatteryPack",
       "name": {
-          "en": "Battery Pack"
-        },
+        "en": "Battery Pack"
+      },
       "class": "other",
-      "capabilities": ["measure_battery","alarm_battery"],
+      "capabilities": [
+        "measure_battery",
+        "alarm_battery"
+      ],
       "images": {
         "large": "/drivers/BatteryPack/assets/images/large.jpg",
         "small": "/drivers/BatteryPack/assets/images/small.jpg"
       },
       "energy": {
-        "batteries":["INTERNAL"]
+        "batteries": [
+          "INTERNAL"
+        ]
       },
       "pair": [
         {
           "id": "list_devices",
-          "template": "list_devices", 
+          "template": "list_devices",
           "navigation": {
-            "next": "add_my_devices" 
+            "next": "add_my_devices"
           }
         },
         {
           "id": "add_my_devices",
-          "template": "add_devices" 
-        }      
+          "template": "add_devices"
+        }
       ],
       "settings": [
-      {
-        "type": "group",
-        "label": {
-          "en": "Core"
-        },
-        "children": [
-          {
-            "id": "core",
-            "type": "label",
-            "value": "primary",
-            "label": {
-              "en": "Hiome Core"
-            }
+        {
+          "type": "group",
+          "label": {
+            "en": "Core"
           },
-          {
-            "id": "mqttid",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "MQTT ID"
+          "children": [
+            {
+              "id": "core",
+              "type": "label",
+              "value": "primary",
+              "label": {
+                "en": "Hiome Core"
+              }
+            },
+            {
+              "id": "mqttid",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "MQTT ID"
+              }
+            },
+            {
+              "id": "last_seen",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "Last seen"
+              }
+            },
+            {
+              "id": "fv",
+              "type": "label",
+              "value": "",
+              "label": {
+                "en": "Firmware version"
+              }
             }
-          },
-          {
-            "id": "last_seen",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "Last seen"
-            }
-          },
-          {
-            "id": "fv",
-            "type": "label",
-            "value": "",
-            "label": {
-              "en": "Firmware version"
-            }
-          }
-
-        ]
-      }
+          ]
+        }
       ]
-    }        
+    }
   ],
   "flow": {
     "actions": [
@@ -371,12 +387,11 @@
           {
             "name": "val",
             "type": "number",
-            "min":  0,
-            "max":  99,
+            "min": 0,
+            "max": 99,
             "step": 1,
             "placeholder": "Number of people"
           }
-
         ]
       }
     ]
