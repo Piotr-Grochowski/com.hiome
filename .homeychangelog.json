@@ -40,5 +40,8 @@
   },
   "3.2.5": {
     "en": "Homey Pro 2023 bugfix"
+  },
+  "3.2.6": {
+    "en": "OccupancySensor trigger bugfix for Homey Pro 2023"
   }
 }

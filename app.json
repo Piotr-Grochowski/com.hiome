@@ -1,6 +1,6 @@
 {
   "id": "com.hiome",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -333,6 +333,31 @@
     }
   ],
   "flow": {
+    "triggers": [
+      {
+        "id": "measure_ppl_count_changed",
+        "title": {
+          "en": "The number of people in the room changed"
+        },
+        "tokens": [
+          {
+            "name": "measure_ppl_count",
+            "title": {
+              "en": "People count"
+            },
+            "type": "number",
+            "example": 2
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=OccupancySensor"
+          }
+        ]
+      }
+    ],
     "actions": [
       {
         "id": "occupancy_increment",
